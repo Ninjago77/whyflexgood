@@ -175,9 +175,9 @@ plt.ylabel('Number of Mentions')
 plt.tight_layout()
 plt.show()
 
-# ==========================================
-# COMPARISONS & CORRELATIONS
-# ==========================================
+# # ==========================================
+# # COMPARISONS & CORRELATIONS
+# # ==========================================
 
 # Comparison 1: Average 'Often' score by Grade
 # Shows which grades utilize flex time the most on average
@@ -191,28 +191,28 @@ plt.xticks(rotation=0)
 plt.tight_layout()
 plt.show()
 
-# Comparison 2: Stacked Bar - Prevention reasons broken down by Grade
-# Shows if certain grades face specific barriers more than others
-cross_tab_prevent = pd.crosstab(df['grade'], df['prevent'])
-cross_tab_prevent.plot(kind='bar', stacked=True, figsize=(12, 8), cmap='tab20')
-plt.title('Barriers to Using Flex Time by Grade')
-plt.xlabel('Grade')
-plt.ylabel('Number of Students')
-plt.xticks(rotation=0)
-plt.legend(title='Prevention Reason', bbox_to_anchor=(1.05, 1), loc='upper left')
-plt.tight_layout()
-plt.show()
+# # Comparison 2: Stacked Bar - Prevention reasons broken down by Grade
+# # Shows if certain grades face specific barriers more than others
+# cross_tab_prevent = pd.crosstab(df['grade'], df['prevent'])
+# cross_tab_prevent.plot(kind='bar', stacked=True, figsize=(12, 8), cmap='tab20')
+# plt.title('Barriers to Using Flex Time by Grade')
+# plt.xlabel('Grade')
+# plt.ylabel('Number of Students')
+# plt.xticks(rotation=0)
+# plt.legend(title='Prevention Reason', bbox_to_anchor=(1.05, 1), loc='upper left')
+# plt.tight_layout()
+# plt.show()
 
-# Comparison 3: Usage ('what') broken down by Grade
-cross_tab_what = pd.crosstab(df_what_exploded['grade'], df_what_exploded['what'])
-cross_tab_what.plot(kind='bar', figsize=(14, 8), cmap='Set2')
-plt.title('Flex Time Activities by Grade')
-plt.xlabel('Grade')
-plt.ylabel('Number of Mentions')
-plt.xticks(rotation=0)
-plt.legend(title='Activity', bbox_to_anchor=(1.05, 1), loc='upper left')
-plt.tight_layout()
-plt.show()
+# # Comparison 3: Usage ('what') broken down by Grade
+# cross_tab_what = pd.crosstab(df_what_exploded['grade'], df_what_exploded['what'])
+# cross_tab_what.plot(kind='bar', figsize=(14, 8), cmap='Set2')
+# plt.title('Flex Time Activities by Grade')
+# plt.xlabel('Grade')
+# plt.ylabel('Number of Mentions')
+# plt.xticks(rotation=0)
+# plt.legend(title='Activity', bbox_to_anchor=(1.05, 1), loc='upper left')
+# plt.tight_layout()
+# plt.show()
 
 #------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------
@@ -248,16 +248,16 @@ plt.show()
 # VARIATION 2: Grouped Bar (Flex Activities - % of Total Selections)
 # ==========================================
 # Shows how the "pie" of activities is split up within each grade
-what_pct_selections = pd.crosstab(df_what_exploded['grade'], df_what_exploded['what'], normalize='index') * 100
+# what_pct_selections = pd.crosstab(df_what_exploded['grade'], df_what_exploded['what'], normalize='index') * 100
 
-what_pct_selections.plot(kind='bar', figsize=(14, 8), cmap='Set2')
-plt.title('Flex Time Activities (Share of Total Selections per Grade)')
-plt.xlabel('Grade')
-plt.ylabel('Percentage of Total Selections (%)')
-plt.xticks(rotation=0)
-plt.legend(title='Activity', bbox_to_anchor=(1.05, 1), loc='upper left')
-plt.tight_layout()
-plt.show()
+# what_pct_selections.plot(kind='bar', figsize=(14, 8), cmap='Set2')
+# plt.title('Flex Time Activities (Share of Total Selections per Grade)')
+# plt.xlabel('Grade')
+# plt.ylabel('Percentage of Total Selections (%)')
+# plt.xticks(rotation=0)
+# plt.legend(title='Activity', bbox_to_anchor=(1.05, 1), loc='upper left')
+# plt.tight_layout()
+# plt.show()
 
 # ==========================================
 # VARIATION 3: Grouped Bar (Flex Activities - % of Actual Students)
