@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 
 
 def grade(x:str):
-    return x.strip().strip("Grade ") # (int 8-12)
+    return int(x.strip().strip("Grade ")) # (int 8-12)
 
 
 def often(x:str):
@@ -209,6 +209,69 @@ cross_tab_what.plot(kind='bar', figsize=(14, 8), cmap='Set2')
 plt.title('Flex Time Activities by Grade')
 plt.xlabel('Grade')
 plt.ylabel('Number of Mentions')
+plt.xticks(rotation=0)
+plt.legend(title='Activity', bbox_to_anchor=(1.05, 1), loc='upper left')
+plt.tight_layout()
+plt.show()
+
+#------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------
+
+# Ensure grades are treated as integers for correct sorting
+df['grade'] = df['grade'].astype(int)
+df_what_exploded = df.explode('what')
+
+# ==========================================
+# VARIATION 1: 100% Stacked Bar (Prevention Reasons)
+# ==========================================
+# normalize='index' changes absolute counts into proportions (0.0 - 1.0) per grade
+prevent_pct = pd.crosstab(df['grade'], df['prevent'], normalize='index') * 100
+
+prevent_pct.plot(kind='bar', stacked=True, figsize=(12, 8), cmap='tab20')
+plt.title('What Prevents Students From Using Flex Time (Percentage per Grade)')
+plt.xlabel('Grade')
+plt.ylabel('Percentage of Students (%)')
+plt.ylim(0, 100)
+plt.xticks(rotation=0)
+plt.legend(title='Prevention Reason', bbox_to_anchor=(1.05, 1), loc='upper left')
+plt.tight_layout()
+plt.show()
+
+# ==========================================
+# VARIATION 2: Grouped Bar (Flex Activities - % of Total Selections)
+# ==========================================
+# Shows how the "pie" of activities is split up within each grade
+what_pct_selections = pd.crosstab(df_what_exploded['grade'], df_what_exploded['what'], normalize='index') * 100
+
+what_pct_selections.plot(kind='bar', figsize=(14, 8), cmap='Set2')
+plt.title('Flex Time Activities (Share of Total Selections per Grade)')
+plt.xlabel('Grade')
+plt.ylabel('Percentage of Total Selections (%)')
+plt.xticks(rotation=0)
+plt.legend(title='Activity', bbox_to_anchor=(1.05, 1), loc='upper left')
+plt.tight_layout()
+plt.show()
+
+# ==========================================
+# VARIATION 3: Grouped Bar (Flex Activities - % of Actual Students)
+# ==========================================
+# Since it's a checkbox, this calculates: (How many kids said X) / (Total kids in that grade)
+# Note: Because students can pick multiple answers, columns will NOT add up to 100%
+counts_what = pd.crosstab(df_what_exploded['grade'], df_what_exploded['what'])
+students_per_grade = df['grade'].value_counts()
+what_pct_students = counts_what.div(students_per_grade, axis=0) * 100
+
+what_pct_students.plot(kind='bar', figsize=(14, 8), cmap='Accent')
+plt.title('Percentage of Students in Each Grade Who Select Each Activity\n(Bars represent % of actual students; can exceed 100% total due to checkboxes)')
+plt.xlabel('Grade')
+plt.ylabel('Percentage of Students in Grade (%)')
 plt.xticks(rotation=0)
 plt.legend(title='Activity', bbox_to_anchor=(1.05, 1), loc='upper left')
 plt.tight_layout()
