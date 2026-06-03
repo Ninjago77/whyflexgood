@@ -109,11 +109,11 @@ df = pd.read_excel('flex.xlsx', engine='openpyxl', converters={
 
 
 questions = {
-    "grade": "What Grade are you in?"
-    "often": "How often do you utilize your flex block to receive help with homework?"
-    "when": "When do you usually come in for support with studies?	What do you use flex block for?	"
-    "what": "What prevents you most from using flex block to study/work on assignments?"
-    "prevent": "How would you feel if flex time was removed?"
+    "grade": "What Grade are you in?",
+    "often": "How often do you utilize your flex block to receive help with homework?",
+    "when": "When do you usually come in for support with studies?	What do you use flex block for?	",
+    "what": "What prevents you most from using flex block to study/work on assignments?",
+    "prevent": "How would you feel if flex time was removed?",
     "how": "Do you have any other comments or thoughts?"
 }
 
@@ -126,3 +126,90 @@ df.to_excel('filename.xlsx', index=False)
 
 
 #------------------------
+
+import matplotlib.pyplot as plt
+
+# --- Ensure this goes AFTER your existing data cleaning code ---
+
+# 1. Prepare data for columns containing lists (checkboxes)
+# .explode() creates a separate row for each item in the list, allowing accurate value counts
+df_when_exploded = df.explode('when')
+df_what_exploded = df.explode('what')
+
+# ==========================================
+# PIE CHARTS
+# ==========================================
+
+# Pie Chart: Grade Distribution
+plt.figure(figsize=(8, 6))
+df['grade'].value_counts().plot.pie(autopct='%1.1f%%', startangle=140, cmap='Pastel1')
+plt.title('Distribution of Students by Grade')
+plt.ylabel('') # Hides the y-label for a cleaner look
+plt.show()
+
+# Pie Chart: What prevents students from using Flex block?
+plt.figure(figsize=(10, 8))
+df['prevent'].value_counts().plot.pie(autopct='%1.1f%%', startangle=90, cmap='Set3')
+plt.title('What Prevents Students from Using Flex Block?')
+plt.ylabel('')
+plt.tight_layout()
+plt.show()
+
+# ==========================================
+# BAR CHARTS (Multiple Choice/Checkboxes)
+# ==========================================
+
+# Horizontal Bar Chart: What is Flex block used for?
+plt.figure(figsize=(10, 6))
+df_what_exploded['what'].value_counts().sort_values().plot.barh(color='skyblue')
+plt.title('What Students Use Flex Block For')
+plt.xlabel('Number of Mentions')
+plt.tight_layout()
+plt.show()
+
+# Bar Chart: When do students come in?
+plt.figure(figsize=(8, 6))
+df_when_exploded['when'].value_counts().plot.bar(color='lightgreen', rot=45)
+plt.title('When Students Seek Support')
+plt.ylabel('Number of Mentions')
+plt.tight_layout()
+plt.show()
+
+# ==========================================
+# COMPARISONS & CORRELATIONS
+# ==========================================
+
+# Comparison 1: Average 'Often' score by Grade
+# Shows which grades utilize flex time the most on average
+plt.figure(figsize=(8, 6))
+df.groupby('grade')['often'].mean().sort_index().plot.bar(color='coral')
+plt.title('Average Frequency of Flex Time Usage by Grade\n(1 = Never, 5 = Very Often)')
+plt.xlabel('Grade')
+plt.ylabel('Average Frequency Score')
+plt.ylim(0, 5) # Lock scale to 1-5 range
+plt.xticks(rotation=0)
+plt.tight_layout()
+plt.show()
+
+# Comparison 2: Stacked Bar - Prevention reasons broken down by Grade
+# Shows if certain grades face specific barriers more than others
+cross_tab_prevent = pd.crosstab(df['grade'], df['prevent'])
+cross_tab_prevent.plot(kind='bar', stacked=True, figsize=(12, 8), cmap='tab20')
+plt.title('Barriers to Using Flex Time by Grade')
+plt.xlabel('Grade')
+plt.ylabel('Number of Students')
+plt.xticks(rotation=0)
+plt.legend(title='Prevention Reason', bbox_to_anchor=(1.05, 1), loc='upper left')
+plt.tight_layout()
+plt.show()
+
+# Comparison 3: Usage ('what') broken down by Grade
+cross_tab_what = pd.crosstab(df_what_exploded['grade'], df_what_exploded['what'])
+cross_tab_what.plot(kind='bar', figsize=(14, 8), cmap='Set2')
+plt.title('Flex Time Activities by Grade')
+plt.xlabel('Grade')
+plt.ylabel('Number of Mentions')
+plt.xticks(rotation=0)
+plt.legend(title='Activity', bbox_to_anchor=(1.05, 1), loc='upper left')
+plt.tight_layout()
+plt.show()
