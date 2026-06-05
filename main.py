@@ -1,5 +1,4 @@
 import pandas as pd
-import matplotlib.pyplot as plt
 
 
 def grade(x:str):
@@ -83,8 +82,7 @@ what = [
 
 prevent = [
     "Availability of teachers",
-    "Distractions in class. i.e. devices/people",
-    "talking",
+    "Distractions in class. i.e. devices/people talking",
     "Communicating with peers",
     "Lack of energy or motivation",
     "Nothing prevents me from using flex time"
@@ -111,10 +109,10 @@ df = pd.read_excel('flex.xlsx', engine='openpyxl', converters={
 questions = {
     "grade": "What Grade are you in?",
     "often": "How often do you utilize your flex block to receive help with homework?",
-    "when": "When do you usually come in for support with studies?	What do you use flex block for?	",
-    "what": "What prevents you most from using flex block to study/work on assignments?",
-    "prevent": "How would you feel if flex time was removed?",
-    "how": "Do you have any other comments or thoughts?"
+    "when": "When do you usually come in for support with studies?",
+    "what": "What do you use flex block for?",
+    "prevent": "What prevents you most from using flex block to study/work on assignments?",
+    "how": "How would you feel if flex time was removed?",
 }
 
 df = clean_ms_forms_checkboxes(df, "when", when)
@@ -128,7 +126,8 @@ df.to_excel('filename.xlsx', index=False)
 #------------------------
 
 import matplotlib.pyplot as plt
-
+plt.rcParams['figure.dpi'] = 150
+# plt.style.use('seaborn-v0_8-whitegrid')
 # --- Ensure this goes AFTER your existing data cleaning code ---
 
 # 1. Prepare data for columns containing lists (checkboxes)
@@ -145,6 +144,7 @@ plt.figure(figsize=(8, 6))
 df['grade'].value_counts().plot.pie(autopct='%1.1f%%', startangle=140, cmap='Pastel1')
 plt.title('Distribution of Students by Grade')
 plt.ylabel('') # Hides the y-label for a cleaner look
+plt.legend()
 plt.show()
 
 # Pie Chart: What prevents students from using Flex block?
@@ -152,6 +152,7 @@ plt.figure(figsize=(10, 8))
 df['prevent'].value_counts().plot.pie(autopct='%1.1f%%', startangle=90, cmap='Set3')
 plt.title('What Prevents Students from Using Flex Block?')
 plt.ylabel('')
+plt.legend()
 plt.tight_layout()
 plt.show()
 
