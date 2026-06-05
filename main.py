@@ -312,3 +312,19 @@ plt.xticks(rotation=0)
 plt.legend(title='Activity', bbox_to_anchor=(1.05, 1), loc='upper left')
 plt.tight_layout()
 plt.show()
+
+
+
+
+counts_when = pd.crosstab(df_when_exploded['grade'], df_when_exploded['when'])
+students_per_grade = df['grade'].value_counts()
+when_pct_students = counts_when.div(students_per_grade, axis=0) * 100
+
+when_pct_students.plot(kind='bar', figsize=(14, 8), cmap='Accent')
+plt.title('Percentage of Students in Each Grade Who Select Each Support Time\n(Bars represent % of actual students; can exceed 100% total due to checkboxes)')
+plt.xlabel('Grade')
+plt.ylabel('Percentage of Students in Grade (%)')
+plt.xticks(rotation=0)
+plt.legend(title='Support Time', bbox_to_anchor=(1.05, 1), loc='upper left')
+plt.tight_layout()
+plt.show()
