@@ -138,44 +138,79 @@ df_what_exploded = df.explode('what')
 # ==========================================
 # PIE CHARTS
 # ==========================================
-
 # Pie Chart: Grade Distribution
-plt.figure(figsize=(8, 6))
-df['grade'].value_counts().plot.pie(autopct='%1.1f%%', startangle=140, cmap='Pastel1')
-plt.title('Distribution of Students by Grade')
-plt.ylabel('') # Hides the y-label for a cleaner look
-plt.legend()
-plt.show()
+# plt.figure(figsize=(8, 6))
+# df['grade'].value_counts().plot.pie(autopct='%1.1f%%', startangle=140, cmap='Pastel1')
+# plt.title('Distribution of Students by Grade')
+# plt.ylabel('') # Hides the y-label for a cleaner look
+# plt.legend()
+# plt.show()
 
-# Pie Chart: What prevents students from using Flex block?
-plt.figure(figsize=(10, 8))
-df['prevent'].value_counts().plot.pie(autopct='%1.1f%%', startangle=90, cmap='Set3')
-plt.title('What Prevents Students from Using Flex Block?')
-plt.ylabel('')
-plt.legend()
-plt.tight_layout()
-plt.show()
-
+# # Pie Chart: What prevents students from using Flex block?
+# plt.figure(figsize=(10, 8))
+# df['prevent'].value_counts().plot.pie(autopct='%1.1f%%', startangle=90, cmap='Set3')
+# plt.title('What Prevents Students from Using Flex Block?')
+# plt.ylabel('')
+# plt.legend()
+# plt.tight_layout()
+# plt.show()
 # ==========================================
 # BAR CHARTS (Multiple Choice/Checkboxes)
 # ==========================================
 
+# # Horizontal Bar Chart: What is Flex block used for?
+# plt.figure(figsize=(10, 6))
+# df_what_exploded['what'].value_counts().sort_values().plot.barh(color='skyblue')
+# plt.title('What Students Use Flex Block For')
+# plt.xlabel('Number of Mentions')
+# plt.ylabel('')
+# plt.tight_layout()
+# plt.show()
+
+# # Bar Chart: When do students come in?
+# plt.figure(figsize=(8, 6))
+# df_when_exploded['when'].value_counts().plot.bar(color='lightgreen', rot=45)
+# plt.title('When Students Seek Support')
+# plt.ylabel('Number of Mentions')
+# plt.xlabel('')
+# plt.tight_layout()
+# plt.show()
+
 # Horizontal Bar Chart: What is Flex block used for?
 plt.figure(figsize=(10, 6))
-df_what_exploded['what'].value_counts().sort_values().plot.barh(color='skyblue')
+counts_what = df_what_exploded['what'].value_counts().sort_values()
+colors_what = [plt.cm.tab10(i % 10) for i in range(len(counts_what))]
+
+# Plot the bars
+bars_what = plt.barh(counts_what.index, counts_what.values, color=colors_what)
+
 plt.title('What Students Use Flex Block For')
 plt.xlabel('Number of Mentions')
+plt.ylabel('')
+
+# Generate legend handles matching each specific category to its color
+plt.legend(handles=bars_what, labels=list(counts_what.index), loc='lower right')
 plt.tight_layout()
 plt.show()
+
 
 # Bar Chart: When do students come in?
 plt.figure(figsize=(8, 6))
-df_when_exploded['when'].value_counts().plot.bar(color='lightgreen', rot=45)
+counts_when = df_when_exploded['when'].value_counts()
+colors_when = [plt.cm.Set2(i % 8) for i in range(len(counts_when))]
+
+# Plot the bars
+bars_when = plt.bar(counts_when.index, counts_when.values, color=colors_when)
+
 plt.title('When Students Seek Support')
 plt.ylabel('Number of Mentions')
+plt.xlabel('')
+plt.xticks(rotation=45)
+
+# Generate legend handles matching each specific category to its color
+plt.legend(handles=bars_when, labels=list(counts_when.index), loc='upper right')
 plt.tight_layout()
 plt.show()
-
 # # ==========================================
 # # COMPARISONS & CORRELATIONS
 # # ==========================================
