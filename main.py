@@ -89,7 +89,7 @@ prevent = [
     ]
 
 def how(x:str):
-    return x.strip()
+    return x
 
 
 # Load data
@@ -128,7 +128,7 @@ df.to_excel('filename.xlsx', index=False)
 import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
 
-plt.rcParams['figure.dpi'] = 150
+# plt.rcParams['figure.dpi'] = 150
 # plt.style.use('seaborn-v0_8-whitegrid')
 # --- Ensure this goes AFTER your existing data cleaning code ---
 
@@ -343,60 +343,60 @@ df['grade'] = df['grade'].astype(int)
 #####################################################################################################################################
 #####################################################################################################################################
 
-import seaborn as sns
+# import seaborn as sns
 
-# Explode both columns to create a Cartesian product for each student
-# (e.g., if a student picks 2 'what's and 2 'when's, it maps all 4 combinations)
-df_combinations = df[['what', 'when']].copy()
-df_combinations = df_combinations.explode('what').explode('when')
+# # Explode both columns to create a Cartesian product for each student
+# # (e.g., if a student picks 2 'what's and 2 'when's, it maps all 4 combinations)
+# df_combinations = df[['what', 'when']].copy()
+# df_combinations = df_combinations.explode('what').explode('when')
 
-# Create a cross-tabulation matrix
-co_occurrence = pd.crosstab(df_combinations['what'], df_combinations['when'])
+# # Create a cross-tabulation matrix
+# co_occurrence = pd.crosstab(df_combinations['what'], df_combinations['when'])
 
-plt.figure(figsize=(10, 6))
-sns.heatmap(co_occurrence, annot=True, fmt='d', cmap='Blues', linewidths=.5)
-plt.title('Activity vs. Time: When are specific tasks happening?')
-plt.xlabel('When they seek support')
-plt.ylabel('What flex time activities they do')
-plt.tight_layout()
-plt.show()
+# plt.figure(figsize=(10, 6))
+# sns.heatmap(co_occurrence, annot=True, fmt='d', cmap='Blues', linewidths=.5)
+# plt.title('Activity vs. Time: When are specific tasks happening?')
+# plt.xlabel('When they seek support')
+# plt.ylabel('What flex time activities they do')
+# plt.tight_layout()
+# plt.show()
 
 
 
 ######
 
 
-plt.figure(figsize=(12, 6))
-# Calculate the average 'often' score for each prevention reason, sorted descending
-avg_often_by_prevent = df.groupby('prevent')['often'].mean().sort_values(ascending=False)
+# plt.figure(figsize=(12, 6))
+# # Calculate the average 'often' score for each prevention reason, sorted descending
+# avg_often_by_prevent = df.groupby('prevent')['often'].mean().sort_values(ascending=False)
 
-# Create a bar chart with a color gradient based on the score
-ax = sns.barplot(
-    x=avg_often_by_prevent.values, 
-    y=avg_often_by_prevent.index, 
-    palette='magma'
-)
+# # Create a bar chart with a color gradient based on the score
+# ax = sns.barplot(
+#     x=avg_often_by_prevent.values, 
+#     y=avg_often_by_prevent.index, 
+#     palette='magma'
+# )
 
-# Add a vertical line for the overall school average frequency
-overall_avg = df['often'].mean()
-plt.axvline(overall_avg, color='red', linestyle='--', label=f'School Average ({overall_avg:.2f})')
+# # Add a vertical line for the overall school average frequency
+# overall_avg = df['often'].mean()
+# plt.axvline(overall_avg, color='red', linestyle='--', label=f'School Average ({overall_avg:.2f})')
 
-plt.title('What prevents the most? : Average Flex Usage Frequency by Flex Attendance Prevention')
-plt.xlabel('Average Frequency Score (1 = Never, 5 = Very Often)')
-plt.ylabel('What prevents them?')
-# Dynamically extract the colors used by Seaborn to create matching legend patches
-colors = [patch.get_facecolor() for patch in ax.patches]
-category_patches = [
-    mpatches.Patch(color=color, label=label)
-    for label, color in zip(avg_often_by_prevent.index, colors)
-]
+# plt.title('What prevents the most? : Average Flex Usage Frequency by Flex Attendance Prevention')
+# plt.xlabel('Average Frequency Score (1 = Never, 5 = Very Often)')
+# plt.ylabel('What prevents them?')
+# # Dynamically extract the colors used by Seaborn to create matching legend patches
+# colors = [patch.get_facecolor() for patch in ax.patches]
+# category_patches = [
+#     mpatches.Patch(color=color, label=label)
+#     for label, color in zip(avg_often_by_prevent.index, colors)
+# ]
 
-# Combine the school average line handle with the new category patches for the legend
-handles, labels = ax.get_legend_handles_labels()
-plt.legend(handles=handles + category_patches, bbox_to_anchor=(1, 0), loc='lower right')
-plt.xlim(1, 5)
-plt.tight_layout()
-plt.show()
+# # Combine the school average line handle with the new category patches for the legend
+# handles, labels = ax.get_legend_handles_labels()
+# plt.legend(handles=handles + category_patches, bbox_to_anchor=(1, 0), loc='lower right')
+# plt.xlim(1, 5)
+# plt.tight_layout()
+# plt.show()
 
 
 
@@ -404,58 +404,369 @@ plt.show()
 
 
 
-# Calculate how many different activities each student selected
-df['activity_count'] = df['what'].apply(len)
+# # Calculate how many different activities each student selected
+# df['activity_count'] = df['what'].apply(len)
 
-plt.figure(figsize=(10, 6))
-# Boxplot shows the distribution of frequency scores based on how many activities they chose
-sns.boxplot(x='activity_count', y='often', data=df, palette='Set3')
-sns.stripplot(x='activity_count', y='often', data=df, color=".25", alpha=0.5, jitter=True)
+# plt.figure(figsize=(10, 6))
+# # Boxplot shows the distribution of frequency scores based on how many activities they chose
+# sns.boxplot(x='activity_count', y='often', data=df, palette='Set3')
+# sns.stripplot(x='activity_count', y='often', data=df, color=".25", alpha=0.5, jitter=True)
 
-plt.title('Usage Breadth: Does having more reasons to attend increase frequency?')
-plt.xlabel('Number of Different Activities Selected')
-plt.ylabel('Frequency Score (1-5)')
-plt.tight_layout()
-plt.show()
+# plt.title('Usage Breadth: Does having more reasons to attend increase frequency?')
+# plt.xlabel('Number of Different Activities Selected')
+# plt.ylabel('Frequency Score (1-5)')
+# plt.tight_layout()
+# plt.show()
 
 
 
 ######
 
-# Pivot table calculating the mean 'often' score for every Grade + Barrier combination
-pivot_often = pd.pivot_table(
-    df, 
-    values='often', 
-    index='prevent', 
-    columns='grade', 
-    aggfunc='mean'
-)
+# # Pivot table calculating the mean 'often' score for every Grade + Barrier combination
+# pivot_often = pd.pivot_table(
+#     df, 
+#     values='often', 
+#     index='prevent', 
+#     columns='grade', 
+#     aggfunc='mean'
+# )
 
-plt.figure(figsize=(12, 7))
-# Use a diverging colormap so lower scores are red/orange, high scores are green/blue
-sns.heatmap(pivot_often, annot=True, fmt=".1f", cmap='RdYlGn', center=df['often'].mean(), linewidths=.5)
-plt.title("Flex Usage & Barriers: Average Frequency by Grade and Prevention Reason")
-plt.xlabel('Grade')
-plt.ylabel('What prevents them?')
-plt.tight_layout()
-plt.show()
+# plt.figure(figsize=(12, 7))
+# # Use a diverging colormap so lower scores are red/orange, high scores are green/blue
+# sns.heatmap(pivot_often, annot=True, fmt=".1f", cmap='RdYlGn', center=df['often'].mean(), linewidths=.5)
+# plt.title("Flex Usage & Barriers: Average Frequency by Grade and Prevention Reason")
+# plt.xlabel('Grade')
+# plt.ylabel('What prevents them?')
+# plt.tight_layout()
+# plt.show()
 
 
 #####
 
-from matplotlib_venn import venn2 
-# (You may need to `pip install matplotlib-venn` if you don't have it)
+# from matplotlib_venn import venn2 
+# # (You may need to `pip install matplotlib-venn` if you don't have it)
 
-# Create sets of indices for students who do homework vs students who study
-hw_users = set(df[df['what'].apply(lambda x: 'To do homework' in x)].index)
-study_users = set(df[df['what'].apply(lambda x: 'To study or ask for help' in x)].index)
+# # Create sets of indices for students who do homework vs students who study
+# hw_users = set(df[df['what'].apply(lambda x: 'To do homework' in x)].index)
+# study_users = set(df[df['what'].apply(lambda x: 'To study or ask for help' in x)].index)
 
-plt.figure(figsize=(8, 6))
-venn2(
-    [hw_users, study_users], 
-    set_labels=('To do homework', 'To study/ask for help'),
-    set_colors=('skyblue', 'lightgreen')
+# plt.figure(figsize=(8, 6))
+# venn2(
+#     [hw_users, study_users], 
+#     set_labels=('To do homework', 'To study/ask for help'),
+#     set_colors=('skyblue', 'lightgreen')
+# )
+# plt.title('Overlap of Academic Users: Homework vs. Studying')
+# plt.tight_layout()
+# plt.show()
+
+######################################################################################################
+######################################################################################################
+
+# import seaborn as sns
+# import numpy as np
+
+# # 1. Explode 'when' so we can compare the checkbox list against the single 'prevent' column
+# df_when_exploded = df.explode('when')
+
+# # 2. Count the occurrences of each combination
+# bubble_data = pd.crosstab(df_when_exploded['when'], df_when_exploded['prevent'])
+# # Convert the matrix into a flat format suitable for a scatterplot
+# bubble_data = bubble_data.reset_index().melt(id_vars='when', var_name='prevent', value_name='count')
+
+# # Remove zero-counts to keep the graph clean
+# bubble_data = bubble_data[bubble_data['count'] > 0]
+
+# plt.figure(figsize=(12, 7))
+# # Create the bubble heatmap using scatterplot
+# sns.scatterplot(
+#     data=bubble_data, 
+#     x='prevent', 
+#     y='when', 
+#     size='count', 
+#     hue='count', 
+#     sizes=(100, 2000),  # Adjust bubble size range here
+#     palette='YlOrRd',   # Yellow to Red gradient
+#     edgecolor='black',
+#     alpha=0.8
+# )
+
+# plt.title('Bubble Heatmap: Support Times vs. Primary Barriers', fontsize=14, pad=20)
+# plt.xlabel('What prevents them from using flex time?', fontsize=11)
+# plt.ylabel('When they usually come in', fontsize=11)
+
+# # Format the grid and legend
+# plt.grid(color='lightgray', linestyle='--', linewidth=0.5, zorder=0)
+# plt.xticks(rotation=30, ha='right')
+# plt.legend(title='Number of Students', bbox_to_anchor=(1.05, 1), loc='upper left', frameon=False)
+# plt.tight_layout()
+# plt.show()
+
+
+########
+
+# import networkx as nx
+
+# # 1. Explode 'what' to map individual activities to the barriers
+# df_what_exploded = df.explode('what')
+
+# # 2. Get edge weights (how many students share a specific activity + barrier)
+# edge_weights = df_what_exploded.groupby(['what', 'prevent']).size().reset_index(name='weight')
+# edge_weights = edge_weights[edge_weights['weight'] > 0] # Filter empty relationships
+
+# # 3. Initialize the graph
+# G = nx.Graph()
+
+# # Add nodes (assigning them to two different 'bipartite' sets for layout purposes)
+# for activity in df_what_exploded['what'].dropna().unique():
+#     G.add_node(activity, bipartite=0)
+# for barrier in df['prevent'].dropna().unique():
+#     G.add_node(barrier, bipartite=1)
+
+# # Add edges with weights
+# for _, row in edge_weights.iterrows():
+#     G.add_edge(row['what'], row['prevent'], weight=row['weight'])
+
+# plt.figure(figsize=(14, 8))
+
+# # Define a bipartite layout (Activities on the left, Barriers on the right)
+# pos = nx.bipartite_layout(G, df_what_exploded['what'].dropna().unique(), align='vertical')
+
+# # Scale the thickness of the lines based on the weight (number of students)
+# weights = [G[u][v]['weight'] / 3 for u, v in G.edges()] # Divide by 3 to scale line thickness down visually
+
+# # Draw the network
+# nx.draw_networkx_nodes(G, pos, node_color='skyblue', node_size=3000, edgecolors='black', alpha=0.9)
+# nx.draw_networkx_edges(G, pos, width=weights, edge_color='gray', alpha=0.5)
+
+# # Add custom labels with a slight offset so they are readable
+# label_pos = {k: [v[0], v[1]] for k, v in pos.items()}
+# for k, v in label_pos.items():
+#     v[0] += 0.15 if pos[k][0] == 1 else -0.15  # Shift text left or right depending on side
+# nx.draw_networkx_labels(G, label_pos, font_size=10, font_weight="bold")
+
+# plt.title('Network Graph: How Specific Activities are Impacted by Specific Barriers', fontsize=15)
+# plt.axis('off') # Hide the standard axes for a clean look
+# plt.margins(0.2)
+# plt.tight_layout()
+# plt.show()
+
+########
+
+# from math import pi
+
+# # 1. Prepare data: Get percentage of each barrier per grade
+# df_radar = pd.crosstab(df['grade'], df['prevent'], normalize='index') * 100
+# categories = df_radar.columns.tolist()
+# N = len(categories)
+
+# # We define the angles for the radar chart based on the number of categories
+# angles = [n / float(N) * 2 * pi for n in range(N)]
+# angles += angles[:1] # Close the circle
+
+# plt.figure(figsize=(10, 10))
+# ax = plt.subplot(111, polar=True)
+
+# # Set the starting angle and rotation
+# ax.set_theta_offset(pi / 2)
+# ax.set_theta_direction(-1)
+
+# # Draw one axe per variable + add labels
+# plt.xticks(angles[:-1], categories, color='grey', size=10)
+# # Adjust y-labels (percentages)
+# ax.set_rlabel_position(0)
+# plt.yticks([10, 20, 30, 40, 50], ["10%","20%","30%","40%","50%"], color="grey", size=8)
+# plt.ylim(0, df_radar.max().max() + 10) # Set max radius
+
+# # Colors for different grades
+# colors = plt.cm.Set1.colors
+
+# # Draw the shapes for a few specific grades to avoid too much clutter 
+# # (e.g., comparing Grade 8 vs Grade 12)
+# grades_to_compare = [8, 12] # Change this to df_radar.index to plot ALL grades
+
+# for i, grade_val in enumerate(grades_to_compare):
+#     if grade_val in df_radar.index:
+#         values = df_radar.loc[grade_val].values.flatten().tolist()
+#         values += values[:1] # Close the circle
+        
+#         ax.plot(angles, values, linewidth=2, linestyle='solid', label=f'Grade {grade_val}', color=colors[i])
+#         ax.fill(angles, values, color=colors[i], alpha=0.1)
+
+# plt.title('Radar Chart: The Usage Prevention Footprint (Grade 8 vs Grade 12)', size=15, pad=30)
+# plt.legend(loc='upper right', bbox_to_anchor=(1.3, 1.1))
+# plt.tight_layout()
+# plt.show()
+
+
+# import seaborn as sns
+# plt.figure(figsize=(12, 7))
+
+# # 1. Draw the Violin Plot (shows the probability density of the data)
+# sns.violinplot(
+#     data=df, 
+#     x='often', 
+#     y='prevent', 
+#     inner=None,          # Turn off the default mini-box plot inside
+#     color='lightgray', 
+#     alpha=0.5,
+#     cut=0                # Keep the violin bounded within the actual 1-5 data limits
+# )
+
+# # 2. Overlay the Swarm Plot (plots a dot for every single student)
+# sns.swarmplot(
+#     data=df, 
+#     x='often', 
+#     y='prevent', 
+#     size=5,              # Size of the dots
+#     palette='Dark2', 
+#     alpha=0.8,
+#     hue='prevent',       # Color by prevention reason
+#     legend=False
+# )
+
+# plt.title('Violin & Swarm Overlay: Exact Distribution of Attendance Frequency by Barrier', fontsize=14)
+# plt.xlabel('Frequency Score (1 = Never, 5 = Very Often)', fontsize=12)
+# plt.ylabel('Prevention Reason', fontsize=12)
+# plt.xticks([1, 2, 3, 4, 5]) # Force X axis to only show whole numbers 1-5
+# plt.tight_layout()
+# plt.show()
+
+# import plotly.graph_objects as go
+# import pandas as pd
+
+# # Group data to get counts of each path from 'often' to 'how'
+# flow_df = df.groupby(['often', 'how']).size().reset_index(name='count')
+
+# # Sankey requires nodes to be numbers. We have to map our categories to index numbers.
+# all_nodes = list(flow_df['often'].astype(str).unique()) + list(flow_df['how'].unique())
+# node_indices = {node: i for i, node in enumerate(all_nodes)}
+
+# # Map the source (often) and target (how) to their new index numbers
+# source = flow_df['often'].astype(str).map(node_indices).tolist()
+# target = flow_df['how'].map(node_indices).tolist()
+# value = flow_df['count'].tolist()
+
+# # Create the Sankey diagram
+# fig = go.Figure(data=[go.Sankey(
+#     node=dict(
+#         pad=20,
+#         thickness=30,
+#         line=dict(color="black", width=0.5),
+#         label=all_nodes,
+#         color="lightblue"
+#     ),
+#     link=dict(
+#         source=source,
+#         target=target,
+#         value=value,
+#         color="rgba(173, 216, 230, 0.4)" # Semi-transparent blue for the flow ribbons
+#     )
+# )])
+
+# fig.update_layout(
+#     title_text="Data Flow: How Frequency of Use Dictates Emotional Response to Removal", 
+#     font_size=12,
+#     height=600
+# )
+# fig.show()
+
+# import plotly.express as px
+
+# # We use df_what_exploded so we capture every activity appropriately
+# df_tree = df_what_exploded.groupby(['what', 'how']).size().reset_index(name='count')
+
+# # Filter out zero counts
+# df_tree = df_tree[df_tree['count'] > 0]
+
+# # Generate the Treemap
+# fig = px.treemap(
+#     df_tree, 
+#     path=['what', 'how'], # This defines the hierarchy (Parent = What, Child = How)
+#     values='count',
+#     color='count',
+#     color_continuous_scale='Teal',
+#     title="Activity vs. Sentiment: How do students performing specific tasks feel about losing Flex Time?"
+# )
+
+# fig.update_traces(root_color="lightgrey")
+# fig.update_layout(margin = dict(t=50, l=25, r=25, b=25))
+# fig.show()
+
+# import seaborn as sns
+# import matplotlib.pyplot as plt
+
+# # Set up a sleek white grid theme
+# sns.set_theme(style="white", rc={"axes.facecolor": (0, 0, 0, 0)})
+
+# # Initialize the FacetGrid: one row per 'how' feeling
+# g = sns.FacetGrid(df, row="how", hue="how", aspect=6, height=1.5, palette="magma")
+
+# # Draw the densities (the "mountains") - ADDED clip=(1, 5)
+# g.map(sns.kdeplot, "often", bw_adjust=1, clip_on=False, fill=True, alpha=0.7, linewidth=1.5, clip=(1, 5))
+
+# # Draw a white outline for separation to make them pop - ADDED clip=(1, 5)
+# g.map(sns.kdeplot, "often", clip_on=False, color="w", lw=2, bw_adjust=1, clip=(1, 5))
+
+# # Pass the feeling label to the left of each mountain
+# def label(x, color, label):
+#     ax = plt.gca()
+#     ax.text(0, .2, label, fontweight="bold", color=color,
+#             ha="left", va="center", transform=ax.transAxes)
+# g.map(label, "often")
+
+# # Remove standard axes for the true "floating mountain" look
+# g.set_titles("")
+# g.set(yticks=[], ylabel="")
+# g.despine(bottom=True, left=True)
+
+# plt.suptitle('Density of Usage Frequency (1-5) Segmented by Emotional Response', y=.9, fontsize=14)
+# plt.xlabel("Frequency Score (1 = Never, 5 = Very Often)", fontsize=12)
+# g.figure.supylabel(
+#     "Emotional Response to Flex Removal (0 = Hate it, 10 = Love it)", 
+#     fontsize=12, 
+#     x=0.02 # Slightly adjust x position so it doesn't overlap the text labels
+# )
+# # 2. CRITICAL: Force the figure to make space at the top so the suptitle isn't cut off
+# plt.subplots_adjust(top=0.85) 
+
+# # 3. Finally, render
+# plt.show()
+
+# # Reset seaborn theme after plotting so it doesn't mess up your other graphs
+# sns.reset_orig()
+
+import seaborn as sns
+import matplotlib.pyplot as plt
+
+# Explode the 'when' column so we can evaluate each time period
+df_when_exploded = df.explode('when')
+
+# Calculate the percentage of students in each 'when' category that chose each 'how' feeling
+# This normalizes the data so a smaller group (like "After school") can be fairly compared to a large group
+point_data = df_when_exploded.groupby(['when', 'how']).size().reset_index(name='count')
+totals = point_data.groupby('when')['count'].transform('sum')
+point_data['percentage'] = (point_data['count'] / totals) * 100
+
+plt.figure(figsize=(12, 7))
+
+# Create the point plot
+sns.pointplot(
+    data=point_data, 
+    x='how', 
+    y='percentage', 
+    hue='when', 
+    markers=['o', 's', 'D', '^', 'v', 'p'][:len(point_data['when'].unique())], # Unique shape for each line
+    linestyles='-', 
+    palette='Set1'
 )
-plt.title('Overlap of Academic Users: Homework vs. Studying')
+
+plt.title('Sentiment Trajectories: How Feelings Shift Depending on WHEN Students Seek Support', fontsize=14)
+plt.xlabel('How they would feel if removed', fontsize=12)
+plt.ylabel('Percentage of Students within that Time Group (%)', fontsize=12)
+
+plt.xticks(rotation=15)
+plt.grid(axis='y', linestyle='--', alpha=0.7)
+plt.legend(title='When they seek support', bbox_to_anchor=(1.05, 1), loc='upper left')
 plt.tight_layout()
 plt.show()
